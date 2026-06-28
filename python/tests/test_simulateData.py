@@ -102,10 +102,12 @@ if __name__=='__main__':
     result = bilby.run_sampler(
         likelihood=likelihood, priors=priors, sampler='dynesty', npoints=500,
         walks=10, outdir=outdir, label=label,maxmcmc=10000)
-    result.plot_corner()
+    fig = result.plot_corner()
+    fig.savefig('results/bilby_corner.png')
+    plt.close(fig)
 
-    plt.savefig('results/bilby_corner.png')
-    plt.close()
+    ##plt.savefig('results/bilby_corner.png')
+    ##plt.close()
 
 
     # plot 1d A posterior
