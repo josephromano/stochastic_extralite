@@ -1,9 +1,9 @@
 from __future__ import division
 import numpy as np
+import scipy as scipy
 from scipy.stats import norm
 import matplotlib.pylab as plt
 import matplotlib.mlab as mlab
-
 
 def combinesignalnoise(signalfile, noisefile, A, fileprefix):
 
@@ -47,33 +47,6 @@ def combinesignalsignal(signalfile1, signalfile2, A1, A2, fileprefix):
     return t, d, s1, s2
 
 
-def plothistogram(t, y, t1, t2, fileprefix):
-
-    '''
-    plot histogram of time-series data between t1 and t2 and save plot to .png file
-    '''
-    
-    filename = fileprefix + '_hist.png'
-        
-    # find indices for tlow, thigh
-    n1 = np.where(t>=t1)[0]
-    n2 = np.where(t>=t2)[0]
-
-    # histogram and best fit gaussian of h
-    (mu, sigma) = norm.fit(y[n1[0]:n2[0]])
-    
-    plt.figure()
-    plt.rc('text', usetex=True)
-    plt.tick_params(labelsize=20)
-    n, bins, patches = plt.hist(y[n1[0]:n2[0]], bins=50, normed='true')
-    z = mlab.normpdf(bins, mu, sigma)
-    l = plt.plot(bins, z, 'r--', linewidth=2)
-    plt.xlabel('data', size=22)
-    plt.savefig(filename, bbox_inches='tight', dpi=400)
-    
-    return
-
-
 def plotpowerspectrum(t, y, t1, t2, Fs, fileprefix):
 
     '''
@@ -88,8 +61,8 @@ def plotpowerspectrum(t, y, t1, t2, Fs, fileprefix):
  
     # calculate welch estimate of power spectrum
     N = n2[0]-n1[0]+1;
-    seglength = np.int(N/8.)
-    f, P = scipy.signal.welch(y[n1[0]:n2[0]], fs=Fs, window='hanning', nperseg=seglength)
+    seglength = int(N/8.)
+    f, P = scipy.signal.welch(y[n1[0]:n2[0]], fs=Fs, window='hann', nperseg=seglength)
     
     # plot power spectrum
     plt.figure()
